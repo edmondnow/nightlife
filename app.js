@@ -1,10 +1,13 @@
 var express = require('express');
+var router = express.Router();
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
+//routes
 var index = require('./routes/index');
 var users = require('./routes/users');
 
@@ -14,6 +17,19 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+
+//connect to db
+
+mongoose.connect("mongodb://test:test@ds129156.mlab.com:29156/todoed");
+
+mongoose.connection.once('open', function(){
+	console.log("Connection made. Now for fireworks... ");
+}).on("error", function(error){
+	console.log("Connection error: " + error);
+})
+
+
+
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -22,6 +38,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+//routes
 app.use('/', index);
 app.use('/users', users);
 
@@ -42,5 +60,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+
+app.listen(3000);
 
 module.exports = app;
