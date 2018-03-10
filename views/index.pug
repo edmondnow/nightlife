@@ -1,5 +1,14 @@
-n extends layout
-
+extends layout
+append head
+  link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Michroma|Overpass+Mono|Philosopher|Saira+Condensed|Open+Sans:700')
+  link(rel='stylesheet', href='/stylesheets/index.css')
 block content
-  h1= title
-  p Welcome to #{title}
+  .container
+    form
+      h1  Places 
+      input#search-box(type='search', name='wiki-search', placeholder='Search Yelp...', results='5', autosave='some_unique_value')
+      button#search(type='button', name='search') Search
+
+  if search
+    .container-hidden(style='visibility: hidden')
+

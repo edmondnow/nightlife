@@ -7,7 +7,7 @@ var latestSearch;
 
 
 exports.index_get = function(req, res){
- res.send('NOT IMPLEMENTED')
+ res.render('index', {title: 'Places'});
 }
 
 exports.search_post = function(req, res){

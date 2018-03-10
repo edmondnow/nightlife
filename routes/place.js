@@ -3,8 +3,6 @@ var place_controller = require('../controllers/place_controller.js')
 
 
 
-
-
 //get main page with default view
 router.get('/', place_controller.index_get);
 //get main page after search
