@@ -1,4 +1,5 @@
-var yelpGet = require('yelp');
+var yelp = require('./yelpGet');
+var mongoose = require('mongoose');
 var User = require('../models/user.js');
 var Place = require('../models/place.js');
 
@@ -11,7 +12,10 @@ exports.index_get = function(req, res){
 }
 
 exports.search_post = function(req, res){
- res.send('NOT IMPLEMENTED')
+  yelp(req.body.location).then(function(response){
+    res.render('index', {title: 'Places', data: response});
+  })
+  
 }
 
 

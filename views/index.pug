@@ -2,13 +2,21 @@ extends layout
 append head
   link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Michroma|Overpass+Mono|Philosopher|Saira+Condensed|Open+Sans:700')
   link(rel='stylesheet', href='/stylesheets/index.css')
+  script(src='/javascripts/index.js')
 block content
   .container
-    form
-      h1  Places 
-      input#search-box(type='search', name='wiki-search', placeholder='Search Yelp...', results='5', autosave='some_unique_value')
-      button#search(type='button', name='search') Search
+    h1  Places
+    form#searchForm(action='/' method='post')
+      input#search-box(type='search', name='location', placeholder='Enter your location', results='5', autosave='some_unique_value')
+      button#search(type='submit', form="searchForm") Search
+  if data
+    each place in data 
+      .result-container
+        h3= place.name
+        img(src=place.image_url , alt=place.name)
 
-  if search
-    .container-hidden(style='visibility: hidden')
 
+   
+
+
+  

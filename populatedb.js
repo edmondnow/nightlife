@@ -31,7 +31,7 @@ function userCreate(username, email, password, confirmPassword, cb) {
     username: username,
     email: email,
     password: password,
-    confirmPassword: confirmPassword
+    confirmPassword: confirmPassword2
   });
   
   user.save(function (err) {
@@ -113,3 +113,4 @@ function(err, results) {
 
 
 
+e
