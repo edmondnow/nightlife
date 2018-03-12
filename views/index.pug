@@ -1,41 +1,97 @@
 extends layout
 append head
-  link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Michroma|Overpass+Mono|Philosopher|Saira+Condensed|Open+Sans:700')
-  link(rel='stylesheet', href='/stylesheets/index.css')
-  script(src='/javascripts/index.js')
+	link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Michroma|Overpass+Mono|Philosopher|Saira+Condensed|Open+Sans:700')
+	link(rel='stylesheet', href='/stylesheets/index.css')
+	script(src='/javascripts/index.js')
 block content
-  .container
-    h1  Places
-    form#searchForm(action='/' method='post')
-      input#search-box(type='search', name='location', placeholder='Enter your location', results='5', autosave='some_unique_value')
-      button#search(type='submit', form="searchForm") Search
-  if data
-    each place in data
-      a(href=place.url) 
-        .result-container
-          .row
-            if place.picture
-              .col-md-2
-                .picture-container
-                  img(src=place.picture , alt=place.name)
-            .col-md-6
-              .content-container
-                h3= place.name
-                if description
-                  p #{place.description}
-                if place.rating
-                  p Rating: #{place.rating}
-                if place.phone
-                  p Phone: #{place.phone}
-            .col-md-4
-              h3 RSVP
-              h2 COUNT #{place.count}
-              button.btn.btn-md.btn-info Going
-              button.btn.btn-md.btn-info Not Goin
+	.row 
+		.col-md-11
+		.col-md-1
+			.loga
+				a(data-toggle="modal" data-target="#modal-login") login
+			.loga
+				a(data-toggle="modal" data-target="#modal-sign") register
+	.container
+		h1  #{title}
+		form#searchForm(action='/' method='post')
+			input#search-box(type='search', name='location', placeholder='Enter your location', results='5', autosave='some_unique_value')
+			button#search.format-btn(type='submit', form="searchForm") Search
+	if data
+		each place in data
+			.result-container
+				.row
+					.col-md-2
+						if place.picture
+							.picture-container
+								img(src=place.picture , alt=place.name)
+					.col-md-5
+						.content-container
+							h3= place.name
+							if description
+								p #{place.description}
+							if place.rating
+								p Rating: #{place.rating}
+							if place.phone
+								p Phone: #{place.phone}
+					.col-md-5
+						h3 RSVP
+						h5 #{place.count} Attending
+						form(method="post" action="/rsvp_yes" id=place._id + 'yes')
+							input(type="hidden" name="_id" value=place._id)
+							input(type="hidden" name="location" value=place.location)
+							button.format-btn.btn.btn-sm.btn-success.rsvp(form=place._id + 'yes') Going
+						form(method="post" action="/rsvp_no" id=place._id + 'no')
+							input(type="hidden" name="_id" value=place._id)
+							input(type="hidden" name="location" value=place.location)
+							button.format-btn.btn.btn-sm.btn-danger.rsvp(form=place._id + 'no') Not Going
+	// Sign-up Modal
+	#modal-sign.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modal', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#modalLabel.modal-title Sign-up
+					button.close.btn.btn-sm(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form(method='post', action='', enctype='multipart/form-data')
+						.form-group
+							label(for='inputEmail') Email
+							input#signEmail.form-control(type='email', name='email', placeholder='Enter email address')
+							small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+						.form-group
+							label(for='inputUsername') Username
+							input#signUsername.form-control(type='text', name='username', placeholder='Enter username', pattern='.{6,15}', required='', title='6 characters minimum, maximum 15.')
+						.form-group
+							label(for='inputPassword') Password
+							input#inputPassword.form-control(type='password', name='password', placeholder='Password', required='', pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}', title='Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters')
+						.form-group
+							input#passwordConf.form-control(type='password', name='passwordConf', placeholder='Confirm password', required='', pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}', title='Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters')
+						button#signSubmit.btn.btn-primary(type='submit') Submit
+	// Login Modal
+	#modal-login.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modal', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					h5#modalLabel.modal-title Login
+					button.close(type='button', data-dismiss='modal', aria-label='Close')
+						span(aria-hidden='true') ×
+				.modal-body
+					form(action='', method='post', enctype='multipart/form-data')
+						.form-group
+							label(for='loginEmail') Email
+							input#loginEmail.form-control(type='email', placeholder='Enter email', name='logemail')
+						.form-group
+							label(for='loginPassword') Password
+							input#loginPassword.form-control(type='password', placeholder='Password', name='logpassword')
+						.form-check
+							input#loginCheck.form-check-input(type='checkbox')
+							label.form-check-label(for='loginCheck') Remember me
+						button#loginSubmit.btn.btn-primary(type='submit') Submit
+					
 
 
 
-   
+		 
 
 
-  
+		
