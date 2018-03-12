@@ -10,10 +10,29 @@ block content
       input#search-box(type='search', name='location', placeholder='Enter your location', results='5', autosave='some_unique_value')
       button#search(type='submit', form="searchForm") Search
   if data
-    each place in data 
-      .result-container
-        h3= place.name
-        img(src=place.image_url , alt=place.name)
+    each place in data
+      a(href=place.url) 
+        .result-container
+          .row
+            if place.picture
+              .col-md-2
+                .picture-container
+                  img(src=place.picture , alt=place.name)
+            .col-md-6
+              .content-container
+                h3= place.name
+                if description
+                  p #{place.description}
+                if place.rating
+                  p Rating: #{place.rating}
+                if place.phone
+                  p Phone: #{place.phone}
+            .col-md-4
+              h3 RSVP
+              h2 COUNT #{place.count}
+              button.btn.btn-md.btn-info Going
+              button.btn.btn-md.btn-info Not Goin
+
 
 
    

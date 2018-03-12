@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+mongoose.Promise = global.Promise 
 
 //routes
 var place = require('./routes/place');;
