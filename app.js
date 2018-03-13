@@ -3,20 +3,14 @@ var router = express.Router();
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+var session = require('express-session');
+//var cookieParser = require('cookie-parser'); //not necessary with express-session module
 var bodyParser = require('body-parser');
+var MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise 
-
-//routes
-var place = require('./routes/place');;
+mongoose.Promise = global.Promise;
 
 var app = express();
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 
 //connect to db
 
@@ -28,15 +22,34 @@ mongoose.connection.once('open', function(){
 	console.log("Connection error: " + error);
 })
 
+//use sessions for tracking logins
+app.use(session({
+  secret: 'work hard',
+  resave: true,
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  })
+}));
 
+//routes
+var place = require('./routes/place');;
+
+
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+//app.use(cookieParser()); not in use due to express-session
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 
 //routes

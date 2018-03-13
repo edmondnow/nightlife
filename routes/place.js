@@ -20,7 +20,7 @@ router.post('/register', place_controller.register_post);
 router.post('/login', place_controller.login_post);
 
 //redirect to logged out page
-router.post('/logout', place_controller.logout_post);
+router.get('/logout', place_controller.logout_post);
 
 //yelpGet('Tilburg').then(data => console.log(data));
 

@@ -150,6 +150,23 @@ input[type="search"] {
 
 }
 
+.errdivlog {
+  color: red;
+  margin-top: 10px;
+  position: relative;
+  left: 8%;
+}
+
+.errdivreg {
+  color: red;
+  margin-top: 10px;
+}
+
+.err{
+  color: red;
+
+}
+
 a {
   color:black;
   text-decoration: none;
