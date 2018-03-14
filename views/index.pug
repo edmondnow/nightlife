@@ -2,7 +2,7 @@ extends layout
 append head
 	link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Michroma|Overpass+Mono|Philosopher|Saira+Condensed|Open+Sans:700')
 	link(rel='stylesheet', href='/stylesheets/index.css')
-	script(src='/javascripts/index.js')
+	
 	if error
 		if error.type=='login'
 			script(src='/javascripts/errorlogin.js')
@@ -12,16 +12,16 @@ block content
 	.row 
 		.col-md-11
 		.col-md-1
-			if session
-				.loga
-					a(data-toggle="modal" data-target="#modal-login") #{username}
-				.loga
-					a(href="/logout") logout
-			else 
-				.loga
-					a#login(data-toggle="modal" data-target="#modal-login") login
-				.loga
-					a#register(data-toggle="modal" data-target="#modal-sign") register
+				if session
+					.loga
+						a(data-toggle="modal" data-target="#modal-login") #{username}
+					.loga
+						a(href="/logout") logout
+				else 
+					.loga
+						a#login(data-toggle="modal" data-target="#modal-login") login
+					.loga
+						a#register(data-toggle="modal" data-target="#modal-sign") register
 	.container
 		h1  #{title}
 		form#searchForm(action='/' method='post')
@@ -97,10 +97,10 @@ block content
 					form(action='/login', method='post')
 						.form-group
 							label(for='loginEmail') Email
-							input#loginEmail.form-control(type='email', placeholder='Enter email', name='email')
+							input#loginEmail.form-control(type='email', placeholder='Enter email', name='email' required)
 						.form-group
 							label(for='loginPassword') Password
-							input#loginPassword.form-control(type='password', placeholder='Password', name='password')
+							input#loginPassword.form-control(type='password', placeholder='Password', name='password' required)
 						.form-check
 							input#loginCheck.form-check-input(type='checkbox')
 							label.form-check-label(for='loginCheck') Remember me

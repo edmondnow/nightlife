@@ -1,5 +1,10 @@
 body {
-  margin: 0;
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
 }
 
 
@@ -43,7 +48,9 @@ input[type="search"]::-webkit-input-placeholder {
 }
 
 
-
+.btn-primary{
+  float: left;
+}
 
 
 input[type=search], textarea {

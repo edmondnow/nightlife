@@ -3,6 +3,11 @@ var User = require('../models/user.js');
 var Place = require('../models/place.js');
 var async = require('async');
 
+//please note that that there is no validation mechanism implemented
+//user express-validator dependency
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter')
+
 
 exports.index_get = function(req, res){
 	if(req.session.userId){
