@@ -47,14 +47,17 @@ block content
 					.col-md-5
 						h3 RSVP
 						h5 #{place.count} Attending
-						form(method="post" action="/rsvp_yes" id=place._id + 'yes')
-							input(type="hidden" name="_id" value=place._id)
-							input(type="hidden" name="location" value=place.location)
-							button.format-btn.btn.btn-sm.btn-success.rsvp(form=place._id + 'yes') Going
-						form(method="post" action="/rsvp_no" id=place._id + 'no')
-							input(type="hidden" name="_id" value=place._id)
-							input(type="hidden" name="location" value=place.location)
-							button.format-btn.btn.btn-sm.btn-danger.rsvp(form=place._id + 'no') Not Going
+						if session
+							form(method="post" action="/rsvp_yes" id=place._id + 'yes')
+								input(type="hidden" name="_id" value=place._id)
+								input(type="hidden" name="location" value=place.location)
+								button.format-btn.btn.btn-sm.btn-success.rsvp(form=place._id + 'yes') Going
+							form(method="post" action="/rsvp_no" id=place._id + 'no')
+								input(type="hidden" name="_id" value=place._id)
+								input(type="hidden" name="location" value=place.location)
+								button.format-btn.btn.btn-sm.btn-danger.rsvp(form=place._id + 'no') Not Going
+						else 
+							p Login or register to choose attendance.
 	// Sign-up Modal
 	#modal-sign.modal.fade(tabindex='-1', role='dialog', aria-labelledby='modal', aria-hidden='true')
 		.modal-dialog(role='document')

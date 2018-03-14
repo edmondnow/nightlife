@@ -1,7 +1,8 @@
 
-
+  console.log('lol')
 //Search Box animation
-$('input').click( function () {
+$('button').click( function () {
+
     $('h1').css("-ms-transition","all 0.30s ease-in-out");
     $('h1').css("-moz-transition","all 0.30s ease-in-out");
   $('h1').css("-webkit-transition","all 0.30s ease-in-out");

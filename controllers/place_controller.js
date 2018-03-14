@@ -6,54 +6,49 @@ var async = require('async');
 
 exports.index_get = function(req, res){
 	if(req.session.userId){
-		User.findOne({_id: req.session.userId}).exec(function(err, results){
+		console.log('user')
+		User.findById(req.session.userId, function(err, results){
 			if(err) return console.log(err)
-			res.render('index', {title: 'Places', session: true, username: results.username, error: false});
-
+			return res.render('index', {title: 'Places', session: true, username: results.username, error: false});
 		})
-	}
-
- res.render('index', {title: 'Places', error: false});
+	} else {
+		console.log('no user')
+ 		return res.render('index', {title: 'Places', error: false});
+ }
 }
 
 
 
 exports.search_post = function(req, res){
-	//return data from the yelp api with query string
 	yelp(req.body.location).then(function(response){
-		//save query string as latest search cookie
+		//save query string as latest search cookiep
 		req.session.latest = req.body.location;
-		//find if data is already presend in the database
 		Place.find({location: req.body.location}).exec(function(err, locationres){
 			if(err) console.log(err)
-			//if data is not present add response to database
 			if(locationres==null||JSON.stringify(locationres)=='[]'){
-				Place.collection.insert(response, function(err, dbres){
-					if(err) return console.log(err);
-					//if there is no data to be displayed search for UserId
-					if(locationres==null||JSON.stringify(dbres)=='[]'){
-						if(req.session.userId){
-							User.findById({_id: req.session.userId}).exec(function(err, userData){
-								res.render('index', {title: 'Places', data: [{name: 'No results for this location'}], username: userData.username,
+				Place.collection.insert(response).then( function(){
+					Place.find({location: req.body.location}).exec(function(err, locationres){
+					if(req.session.userId){
+						console.log('session')
+						User.findById({_id: req.session.userId}).exec(function(err, userData){
+								res.render('index', {title: 'Places', data: locationres, username: userData.username, session: true,
 								error: false});
 							})
-						} else {
-							res.render('index', {title: 'Places', data: dbRes, error: false})
-						}
-					}
-
+					} else {
+						console.log('no session')
+						res.render('index', {title: 'Places', data: locationres, error: false, session: false});
+					}		
 				})
-			//if data is present in the database display the data
-			} else {
+			})} else {
 				if(req.session.userId){
-					//if the user has a session display user information
+					console.log('session')
 					User.findById({_id: req.session.userId}).exec(function(err, userData){
-							res.render('index', {title: 'Places', data: locationres, username: userData.username,
+							res.render('index', {title: 'Places', data: locationres, username: userData.username, session: true,
 							error: false});
 						})
-				//if the user has no session display user information
 				} else {
-					res.render('index', {title: 'Places', data: locationres, error: false});
+					console.log('no session')
+					res.render('index', {title: 'Places', data: locationres, session: false, error: false});
 				}		
 			}
 		})
@@ -61,23 +56,42 @@ exports.search_post = function(req, res){
 }
 
 exports.rsvp_yes = function(req, res){
-	Place.findOneAndUpdate({_id: req.body._id}, { $push: { users: "5aa2b4733fa807079042614d" }}).exec(function(err, results){
+	Place.findOne({_id: req.body._id}, function(err, results){
 		if (err) console.log(err);
-		Place.find({location: req.body.location}).exec(function(err, results){
-			res.render('index', {title: 'Places', data: results, error: false});
-		})
+		console.log(results.users)
+		var index = results.users.indexOf(req.session.userId);
+		if(index==-1){
+			results.users.push(req.session.userId)
+			results.save().then(function(){
+				Place.find({location: req.body.location}).exec(function(err, locResults){
+					if (err) console.log(err);
+					if(req.session.userId){
+						User.findById({_id: req.session.userId}).exec(function(err, userResults){
+							if (err) console.log(err);
+							res.render('index', {title: 'Places', data: locResults, session: true, username: userResults.username, error: false});
+						})
+					}
+				})
+			})
+		}
+
 	})
 }
 
 exports.rsvp_no = function(req, res){
-	Place.findOneAndUpdate({_id: req.body._id}, { $pull: { users: "5aa2b4733fa807079042614d" }}).exec(function(err, results){
+	Place.findOneAndUpdate({_id: req.body._id}, { $pull: { users: req.session.userId }}).exec(function(err, results){
 		if (err) console.log(err);
-		Place.find({location: req.body.location}).exec(function(err, results){
-			res.render('index', {title: 'Places', data: results, error: false});
+		Place.find({location: req.body.location}).exec(function(err, locResults){
+			if (err) console.log(err);
+			if(req.session.userId){
+				User.findById({_id: req.session.userId}).exec(function(err, userResults){
+					if (err) console.log(err);
+					res.render('index', {title: 'Places', data: locResults, session: true, username: userResults.username, error: false});
+				})
+			}
 		})
 	})
 }
-
 exports.register_post = function(req, res){
 	if(req.body.password !== req.body.passwordConf){
 		var err = new Error('Passwords do not match.');
@@ -153,7 +167,7 @@ exports.logout_post = function(req, res){
 			if(err) {
 				return next(err);
 			} else {
-				return res.render('index', {title: 'Places'});
+				return res.render('index', {title: 'Places', session: false, error: false});
 			}
 		});
 	}
