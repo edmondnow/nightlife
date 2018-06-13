@@ -6,7 +6,7 @@ var PlaceSchema = new Schema({
   picture: String,
   name: {type: String, required: true},
   description: String,
-  users: [{type: Schema.ObjectId, ref: 'User'}],
+  users: [{type: Schema.ObjectId, ref: 'User', required: true}],
   url: String,
   rating: Number,
   phone: String,

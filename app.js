@@ -14,7 +14,7 @@ var app = express();
 
 //connect to db
 
-mongoose.connect("mongodb://test:test@ds129156.mlab.com:29156/todoed");
+mongoose.connect(`mongodb://${process.env.USER}:${process.env.PASS}@ds129156.mlab.com:29156/todoed`);
 
 mongoose.connection.once('open', function(){
 	console.log("Connection made. Now for fireworks... ");
